@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
 import * as yup from 'yup';
 import NameInput from './NameInput';
@@ -21,16 +21,19 @@ const schema = yup.object().shape({
     .required('Number is required'),
 });
 
-class FormInput extends React.Component {
-  state = {
-    name: '',
-    number: '',
-  };
+function FormInput ({inputData}) {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  
+//  useEffect((e) => {
+//   setName(e.target.element.name);
+//   setNumber(e.target.element.number);
 
-  validateInput = async () => {
-    const { name, number } = this.state;
+//  },[name, number]);
+
+  const validateInput = () => {
     try {
-      await schema.validate({ name, number }, { abortEarly: false });
+      schema.validate({ name, number }, { abortEarly: false });
       return true;
     } catch (errors) {
       console.log(errors);
@@ -39,48 +42,44 @@ class FormInput extends React.Component {
     }
   };
 
-  handleSubmit = async e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    if (await this.validateInput()) {
-      const { name, number } = this.state;
-      const newId = nanoid();
+    if (await validateInput()) {
+      // const { name, number } = { name, number };    
+        const newId = nanoid();
       const newContact = { id: newId, name, number };
-      this.props.addContact(newContact);
-      this.setState({ name: '', number: '' });
+      // setContacts(prevContacts => [...prevContacts, newContact])
+      inputData(newContact);
+      setName('');
+      setNumber('')
+      // useState({ name: '', number: '' });
     }
   };
-  handleInput = e => {
-    const { name, value } = e.currentTarget;
-    this.setState({ [name]: value });
-  };
+  // const handleInput = e => {
+  //   const { name, value } = e.currentTarget;
+  //   setName(value });
+  // };
 
-  handleNameChange = e => {
-    this.setState({ name: e.target.value });
-  };
+ 
 
-  handleNumberChange = e => {
-    this.setState({ number: e.target.value });
-  };
-
-  render() {
-    return (
+      return (
       <form className="form-container">
         <NameInput
-          inputData={this.handleNameChange}
-          userName={this.state.name}
+          inputData={setName}
+          userName={name}
         />
         <NumberInput
-          inputData={this.handleNumberChange}
-          number={this.state.number}
+          inputData={setNumber}
+          number={number}
         />
         <div>
-          <button type="submit" onClick={this.handleSubmit}>
+          <button type="submit" onClick={handleSubmit}>
             Додати
           </button>
         </div>
       </form>
     );
   }
-}
+
 
 export default FormInput;

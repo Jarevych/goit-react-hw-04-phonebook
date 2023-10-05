@@ -1,85 +1,88 @@
 import React, { useState } from 'react';
-import ContactList from './ContactList';
-import FormInput from './Form';
 import './styles.css';
+import { nanoid } from 'nanoid';
+import { useEffect } from 'react';
 
 
-function App () {
- 
-  const [contacts, setContacts] = useState([]);
-  const [filter, setFilter] = useState('');
+export default function App () {
+    const [name, setName] = useState('')
+    const [number, setNumber] = useState('')
+    const [contacts, setContacts] = useState([])
 
+const handleSubmit = event => {
+    event.preventDefault();
+    const newId = nanoid();
+    const newContact = { id: newId, name, number };
+    setContacts(prevContacts => [...prevContacts, newContact])
 
-  const addContact = newContact => {
-    const { name, number } = newContact;
-    const contactExists = contacts.some(
-      contact =>
-        contact.name.toLowerCase().includes(name.toLowerCase()) ||
-        contact.number === number
-    );
-    if (contactExists) {
-      alert(`"${name}"is already in contacts`);
-      return;
-    }
-    this.setState(prevState => ({
-      contacts: [...prevState.contacts, newContact],
-      name: '',
-      number: '',
-    }));
-  };
+    console.log({name});
+    console.log(number)
+    console.log(contacts)
+};
 
-  const handleFilter = e => {
-    const filterValue = e.target.value;
-    setFilter({ filter: filterValue });
-  };
+useEffect(() => {
+  const stringifiedContacts = JSON.stringify(contacts);
+  localStorage.setItem('contacts', stringifiedContacts);
 
-  deleteItem = itemId => {
-    setContacts(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== itemId),
-    }));
-  };
+})
 
-  // componentDidMount() {
-  //   const stringifiedContacts = localStorage.getItem('contacts');
-  //   const parcedContacts = JSON.parse(stringifiedContacts) ?? [];
-  //   this.setState({
-  //     contacts: parcedContacts,
-  //   });
-  // }
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.state.contacts.length !== prevState.contacts.length) {
-  //     const stringifiedContacts = JSON.stringify(this.state.contacts);
-  //     localStorage.setItem('contacts', stringifiedContacts);
-  //   }
-  // }
-
-  
-    const filteredContacts = contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase())
-    );
     return (
-      <div className="app-container">
+        <div className="app-container">
         <h2 className="app-title">Phonebook</h2>
-        <FormInput
-          inputData={handleInput}
-          addContact={addContact}
-          contacts={contacts}
-        />
+        <form className="form-container">
+        <label>
+            Name
+            <input
+              type="text"
+              name="name"
+              value={name}
+              pattern="^[a-zA-Zа-яА-ЯІіЇїҐґ' \-\u0400-\u04FF]+$"
+              title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+              required
+             onChange={event => setName(event.target.value)}
+            />
+          </label>
+          <label>
+      Number
+      <input
+        type="tel"
+        name="number"
+        value={number}
+        pattern="\+?[0-9\s\-\(\)]+"
+        title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+        required
+        onChange={event => setNumber(event.target.value)}
+      />
+    </label>
+        <div>
+          <button type="submit" onSubmit={handleSubmit}>
+            Додати
+          </button>
+        </div>
+      </form>
         <h2 className="contacts-title">Contacts</h2>
         <label>
           Filter
           <input
             type="search"
             name="filter"
-            value={filter}
-            onChange={handleFilter}
+            // value={filter}
+            // onChange={handleFilter()}
           />
         </label>
-        <ContactList
-          contacts={filteredContacts}
-          onDeleteItem={deleteItem}
-        />
+        <div>
+      {/* <ul className="contact-list">
+        {contacts.map(contact => (
+          <li key={contact.id} className="contact-item">
+            <p className="contact-name">Name: {contact.name}</p>
+            <p className="contact-number">Number: {contact.number}</p>
+            <button type="button" onClick={() => onDeleteItem(contact.id)}>
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul> */}
+    </div>
       </div>
-    );
-  }
-
+    )
+}
