@@ -8,7 +8,6 @@ import { useEffect } from 'react';
 export default function App() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  // const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState('')
 
   const [contacts, setContacts] = useState(() => {
@@ -16,12 +15,6 @@ export default function App() {
     const parsedContacts = JSON.parse(stringifiedContacts) ?? [];
     return parsedContacts;
   });
-  // useEffect(() => {
-  //   console.log('useEffect called');
-  //   const stringifiedContacts = localStorage.getItem(contacts);
-  //   const parcedContacts = JSON.parse(stringifiedContacts) ?? [];
-  //   setContacts(parcedContacts);
-  // }, []);
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -98,17 +91,6 @@ export default function App() {
           contacts={filteredContacts}
           onDeleteItem={deleteItem}
         />
-        {/* <ul className="contact-list">
-          {contacts.map(contact => (
-            <li key={contact.id} className="contact-item">
-              <p className="contact-name">Name: {contact.name}</p>
-              <p className="contact-number">Number: {contact.number}</p>
-              <button type="button" onClick={() => deleteItem(contact.id)}>
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul> */}
       </div>
     </div>
   );
