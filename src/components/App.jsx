@@ -6,8 +6,6 @@ import { useEffect } from 'react';
 import Filter from './Filter/Filter';
 
 export default function App() {
-  // const [name, setName] = useState('');
-  // const [number, setNumber] = useState('');
   const [filter, setFilter] = useState('');
 
   const [contacts, setContacts] = useState(() => {
@@ -15,15 +13,6 @@ export default function App() {
     const parsedContacts = JSON.parse(stringifiedContacts) ?? [];
     return parsedContacts;
   });
-
-  // const handleSubmit = event => {
-  //   event.preventDefault();
-  //   const newId = nanoid();
-  //   const newContact = { id: newId, name, number };
-  //   setContacts(prevContacts => [...prevContacts, newContact]);
-  //   setName('');
-  //   setNumber('');
-  // };
 
   useEffect(() => {
     const stringifiedContacts = JSON.stringify(contacts);
@@ -46,7 +35,11 @@ export default function App() {
   return (
     <div className="app-container">
       <h2 className="app-title">Phonebook</h2>
-      <FormInput className="form-container" contacts={contacts} setContacts={setContacts} />
+      <FormInput
+        className="form-container"
+        contacts={contacts}
+        setContacts={setContacts}
+      />
 
       <h2 className="contacts-title">Contacts</h2>
 
