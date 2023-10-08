@@ -46,7 +46,7 @@ export default function App() {
   return (
     <div className="app-container">
       <h2 className="app-title">Phonebook</h2>
-      <FormInput contacts={contacts} setContacts={setContacts} />
+      <FormInput className="form-container" contacts={contacts} setContacts={setContacts} />
 
       <h2 className="contacts-title">Contacts</h2>
 
