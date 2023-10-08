@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import './styles.css';
-import ContactList from './ContactList';
-
-import { nanoid } from 'nanoid';
+import ContactList from './ContactList/ContactList';
+import FormInput from './Form/Form';
 import { useEffect } from 'react';
+import Filter from './Filter/Filter';
 
 export default function App() {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
-  const [filter, setFilter] = useState('')
+  // const [name, setName] = useState('');
+  // const [number, setNumber] = useState('');
+  const [filter, setFilter] = useState('');
 
   const [contacts, setContacts] = useState(() => {
     const stringifiedContacts = localStorage.getItem('contacts');
@@ -16,14 +16,14 @@ export default function App() {
     return parsedContacts;
   });
 
-  const handleSubmit = event => {
-    event.preventDefault();
-    const newId = nanoid();
-    const newContact = { id: newId, name, number };
-    setContacts(prevContacts => [...prevContacts, newContact]);
-    setName('');
-    setNumber('');
-  };
+  // const handleSubmit = event => {
+  //   event.preventDefault();
+  //   const newId = nanoid();
+  //   const newContact = { id: newId, name, number };
+  //   setContacts(prevContacts => [...prevContacts, newContact]);
+  //   setName('');
+  //   setNumber('');
+  // };
 
   useEffect(() => {
     const stringifiedContacts = JSON.stringify(contacts);
@@ -36,8 +36,7 @@ export default function App() {
       prevState.filter(contact => contact.id !== itemId)
     );
   };
-  const handleFilter = event => {
-    const filterValue = event.target.value;
+  const handleFilter = filterValue => {
     setFilter(filterValue);
   };
 
@@ -47,50 +46,14 @@ export default function App() {
   return (
     <div className="app-container">
       <h2 className="app-title">Phonebook</h2>
-      <form className="form-container" onSubmit={handleSubmit}>
-        <label>
-          Name
-          <input
-            type="text"
-            name="name"
-            value={name}
-            pattern="^[a-zA-Zа-яА-ЯІіЇїҐґ' \-\u0400-\u04FF]+$"
-            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-            required
-            onChange={event => setName(event.target.value)}
-          />
-        </label>
-        <label>
-          Number
-          <input
-            type="tel"
-            name="number"
-            value={number}
-            pattern="\+?[0-9\s\-\(\)]+"
-            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-            required
-            onChange={event => setNumber(event.target.value)}
-          />
-        </label>
-        <div>
-          <button type="submit">Додати</button>
-        </div>
-      </form>
+      <FormInput contacts={contacts} setContacts={setContacts} />
+
       <h2 className="contacts-title">Contacts</h2>
-      <label>
-        Filter
-        <input
-          type="search"
-          name="filter"
-          value={filter}
-          onChange={handleFilter}
-        />
-      </label>
+
+      <Filter filter={filter} onFilterChange={handleFilter} />
+
       <div>
-        <ContactList
-          contacts={filteredContacts}
-          onDeleteItem={deleteItem}
-        />
+        <ContactList contacts={filteredContacts} onDeleteItem={deleteItem} />
       </div>
     </div>
   );
